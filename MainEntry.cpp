@@ -1,7 +1,6 @@
-#include <Windows.h>
 #include "General/Engine.h"
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int mCmdShow)
+int main(void)
 {
 	Engine engine;
 	if (!engine.Initialize())

@@ -1,19 +1,21 @@
 #include "Engine.h"
-#include <Windows.h>
-#include <iostream>
+
+#include <thread>
+#include <string>
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 bool Engine::InitEngine()
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
-		MessageBox(NULL, L"Couldn't init SDL\n", L"ERROR", MB_RETRYCANCEL | MB_ICONERROR);	//cancerous need to change that l8er
 		logger.Log("Couldnt init SDL: " + std::string(SDL_GetError()), LoggingFlag::Error);
 		return false;
 	}
 
 	if (TTF_Init() < 0)
 	{
-		MessageBox(NULL, L"Couldn't init ttf\n", L"ERROR", MB_RETRYCANCEL | MB_ICONERROR);	//cancerous need to change that l8er
 		logger.Log("Couldnt init ttf: " + std::string(SDL_GetError()), LoggingFlag::Error);
 		return false;
 	}
@@ -26,7 +28,6 @@ bool Engine::InitEngine()
 	
 	if (!window)
 	{
-		MessageBox(NULL, L"Could not create Window!", L"Error", MB_OK | MB_ICONERROR);
 		logger.Log("Couldnt create Window: " + std::string(SDL_GetError()), LoggingFlag::Error);
 		return false;
 	}
@@ -38,7 +39,6 @@ bool Engine::InitEngine()
 
 	if (!renderer)
 	{
-		MessageBox(NULL, L"Could not create Renderer!", L"Error", MB_OK | MB_ICONERROR);
 		logger.Log("Couldnt create Renderer: " + std::string(SDL_GetError()), LoggingFlag::Error);
 		return false;
 	}
@@ -46,7 +46,6 @@ bool Engine::InitEngine()
 	font = TTF_OpenFont("arial.ttf", 10);
 	if (!font)
 	{
-		MessageBox(NULL, L"Could not create font!", L"Error", MB_OK | MB_ICONERROR);
 		logger.Log("Couldnt create font: " + std::string(TTF_GetError()), LoggingFlag::Error);
 		return false;
 	}
@@ -54,7 +53,6 @@ bool Engine::InitEngine()
 	SDL_Surface* tempFontText = TTF_RenderText_Solid(font, "Hello World!", { 255,0,0,255 });
 	if (!tempFontText)
 	{
-		MessageBox(NULL, L"Could not create font!", L"Error", MB_OK | MB_ICONERROR);
 		logger.Log("Couldnt create font: " + std::string(TTF_GetError()), LoggingFlag::Error);
 		return false;
 	}
@@ -105,9 +103,9 @@ void Engine::RunAsync()	//SETS UP ALL MANAGERS TO run asynchronous (performance 
 void Engine::Shutdown()
 {
 	if (!mapMgr.Shutdown())
-		MessageBox(NULL, L"Failed to shutdown the Mapmgr", L"Error", MB_OK | MB_ICONERROR);
+		logger.Log("Failed to shutdown the Mapmgr", LoggingFlag::Error);
 	shouldRun = false;
-	for (; isRunning; Sleep(100));
+	for (; isRunning; std::this_thread::sleep_for(100ms));
 
 
 	SDL_DestroyRenderer(renderer);
@@ -140,3 +138,4 @@ InputManager & Engine::getInputMgr()
 {
 	return inputMgr;
 }
+

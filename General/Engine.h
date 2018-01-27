@@ -3,8 +3,8 @@
 #include "Logger.h"
 #include "OptionManager.h"
 #include "../GameLogics/InputManager/InputManager.h"
-#include <SDL.h>
-#include <sdl_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/sdl_ttf.h>
 #include <iostream>
 
 //Starting up engine, runnign game loop
